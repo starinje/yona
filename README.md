@@ -1,6 +1,6 @@
 # Yona
 
-![A bear](images/bear.jpg)
+![A bear](images/yona.png)
 
 ## Overview
 
