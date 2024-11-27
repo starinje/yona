@@ -19,7 +19,8 @@ Yona addresses this challenge by covering everything you need from the outset, i
 - **Frontend**: React + TypeScript
 - **Backend**: Go + Gin
 - **Database**: PostgreSQL, Prisma, Neon
-- **Infrastructure**: Docker, Docker Compose, Terraform
+- **Local Dev**: Nix, Docker, Docker Compose
+- **Infrastructure-As-Code**: Terraform
 - **Cloud**: AWS
 - **Authentication**: Auth0
 - **Observabilty**: Datadog
