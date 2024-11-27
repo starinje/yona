@@ -1,3 +1,4 @@
+# Makefile
 
 install-nix:
 	@echo "Checking for Nix installation..."
@@ -8,3 +9,12 @@ install-nix:
 	else \
 		echo "Nix is already installed."; \
 	fi
+	
+start:
+	docker-compose up --build -d
+
+stop:
+	docker-compose down
+
+test-backend:
+	go test ./...  # Run all tests in the current package and sub-packages
