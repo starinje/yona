@@ -50,10 +50,39 @@ To enter the Nix shell and set up your development environment, run the followin
 
 ```bash
 nix-shell
-
 ```
 
 This command creates an isolated environment based on your `shell.nix` file, allowing you to access all specified tools and dependencies. You can exit the Nix shell by typing `exit` or pressing `Ctrl + D`. For more information about Nix, visit the [Nix website](https://nixos.org/nix/).
+
+### 4. Start the Application
+
+To start the application, run:
+
+```bash
+make start
+```
+
+This command will launch the application in the background.
+
+### 5. Stop the Application
+
+To stop the application, use:
+
+```bash
+make stop
+```
+
+This command will terminate the running application.
+
+### 6. Run Backend Tests
+
+To run the tests for the application, execute:
+
+```bash
+make test-backend
+```
+
+This command will run all the defined tests to ensure everything is functioning correctly.
 
 ### More to come, if you see something that should be here, please add it.
 
