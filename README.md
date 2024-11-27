@@ -26,7 +26,7 @@ Yona is a comprehensive boilerplate designed for building scalable, production-r
 
 ```bash
 git clone https://github.com/starinje/yona.git
-cd yona-stack
+cd yona
 ```
 
 ### 2. Install Nix
