@@ -1,6 +1,10 @@
 # Yona
 
+<div align="center">
+
 ![A bear](images/yona.png)
+
+</div>
 
 ## Overview
 
