@@ -4,8 +4,10 @@ package main
 import (
 	"yona-backend/controllers"
 	"yona-backend/repositories"
+	"yona-backend/routes"
 	"yona-backend/services"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,12 +20,16 @@ func main() {
 	// Setup Gin router
 	router := gin.Default()
 
-	// User routes
-	router.GET("/users", userController.GetAllUsers)
-	router.GET("/users/:id", userController.GetUserByID)
-	router.POST("/users", userController.CreateUser)
-	router.PUT("/users/:id", userController.UpdateUser)
-	router.DELETE("/users/:id", userController.DeleteUser)
+	// CORS configuration
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		AllowCredentials: true,
+	}))
+
+	// Setup routes
+	routes.SetupUserRoutes(router, userController)
 
 	// Start server
 	router.Run(":8080")
