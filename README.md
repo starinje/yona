@@ -41,7 +41,7 @@ This project uses Nix to ensure that developers' local environments are all the 
 To install Nix, run the following command at the root level of the `yona` directory:
 
 ```bash
-make install-prerequisites
+make install-nix
 ```
 
 ### 3. Start Nix

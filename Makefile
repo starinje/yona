@@ -17,4 +17,4 @@ stop:
 	docker-compose down
 
 test-backend:
-	go test ./...  # Run all tests in the current package and sub-packages
+	cd backend && go test -v -cover ./...

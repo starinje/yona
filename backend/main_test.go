@@ -2,34 +2,88 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"yona-backend/controllers"
+	"yona-backend/models"
+	"yona-backend/repositories"
+	"yona-backend/services"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestHelloWorld(t *testing.T) {
-	req, err := http.NewRequest("GET", "/", nil)
-	if err != nil {
-		t.Fatal(err)
+func setupRouter() *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	router := gin.Default()
+
+	userRepo := repositories.NewUserRepository()
+	userService := services.NewUserService(userRepo)
+	userController := controllers.NewUserController(userService)
+
+	router.GET("/users", userController.GetAllUsers)
+	router.GET("/users/:id", userController.GetUserByID)
+	router.POST("/users", userController.CreateUser)
+	router.PUT("/users/:id", userController.UpdateUser)
+	router.DELETE("/users/:id", userController.DeleteUser)
+
+	return router
+}
+
+func TestGetAllUsers(t *testing.T) {
+	router := setupRouter()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/users", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	var users []models.User
+	err := json.Unmarshal(w.Body.Bytes(), &users)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, users)
+}
+
+func TestCreateUser(t *testing.T) {
+	router := setupRouter()
+
+	newUser := models.User{
+		Name:  "Jane Doe",
+		Email: "jane@example.com",
 	}
+	jsonUser, _ := json.Marshal(newUser)
 
-	// Create a ResponseRecorder to record the response
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
-	})
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(jsonUser))
+	req.Header.Set("Content-Type", "application/json")
+	router.ServeHTTP(w, req)
 
-	// Serve the HTTP request
-	handler.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusCreated, w.Code)
 
-	// Check the status code
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
+	var createdUser models.User
+	err := json.Unmarshal(w.Body.Bytes(), &createdUser)
+	assert.NoError(t, err)
+	assert.Equal(t, newUser.Name, createdUser.Name)
+	assert.Equal(t, newUser.Email, createdUser.Email)
+	assert.NotZero(t, createdUser.ID)
+}
 
-	// Check the response body
-	expected := "Hello, World!"
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
-	}
+func TestGetUserByID(t *testing.T) {
+	router := setupRouter()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/users/1", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	var user models.User
+	err := json.Unmarshal(w.Body.Bytes(), &user)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, user.ID)
 }
