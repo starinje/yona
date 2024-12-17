@@ -8,11 +8,7 @@
 
 ## Overview
 
-Yona is a comprehensive SaaS boilerplate designed for building scalable, production-ready SaaSplatforms. It provides developers with a straightforward starting point for creating enterprise-grade applications.
-
-Often with new SaaS projects, a significant amount of time is often consumed in selecting the right tech stack and setting up boilerplate code. This process can be tedious and overwhelming, especially with the vast array of technologies available today.
-
-Yona addresses this challenge by covering everything you need from the outset, including local environments, CI/CD deployments, hosting environments, database migrations, and more. With Yona, you can bypass the lengthy setup process and focus on building your application specific business logic.
+Yona is a space for conducting thoughtful conversations on any topic.
 
 ## 🚀 Technologies
 
