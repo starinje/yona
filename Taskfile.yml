@@ -1,0 +1,30 @@
+version: '3'
+
+tasks:
+  install-nix:
+    desc: Install Nix package manager if not already installed
+    cmds:
+      - |
+        if ! command -v nix &> /dev/null; then
+          echo "Nix is not installed. Installing Nix..."
+          curl -L https://nixos.org/nix/install | sh
+          echo "Nix installed successfully. Please restart your terminal or run 'source ~/.nix-profile/etc/profile.d/nix.sh'"
+        else
+          echo "Nix is already installed."
+        fi
+
+  start:
+    desc: Start the application stack with Docker Compose
+    cmds:
+      - docker-compose up --build -d
+
+  stop:
+    desc: Stop the Docker Compose stack
+    cmds:
+      - docker-compose down
+
+  test-backend:
+    desc: Run backend tests with coverage
+    dir: backend
+    cmds:
+      - go test -v -cover ./...
