@@ -3,6 +3,7 @@ package main
 
 import (
 	"yona-backend/controllers"
+	"yona-backend/database"
 	"yona-backend/repositories"
 	"yona-backend/routes"
 	"yona-backend/services"
@@ -12,8 +13,11 @@ import (
 )
 
 func main() {
+	// Initialize database connection
+	db := database.ConnectDB()
+
 	// Initialize dependencies
-	userRepo := repositories.NewUserRepository()
+	userRepo := repositories.NewUserRepository(db)
 	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
 

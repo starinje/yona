@@ -1,57 +1,62 @@
 package repositories
 
 import (
-	"errors"
 	"yona-backend/models"
+
+	"gorm.io/gorm"
 )
 
 type UserRepository struct {
-	users []models.User
+	db *gorm.DB
 }
 
-func NewUserRepository() *UserRepository {
+func NewUserRepository(db *gorm.DB) *UserRepository {
+	// Auto-migrate the schema
+	db.AutoMigrate(&models.User{})
 	return &UserRepository{
-		users: []models.User{
-			{ID: 1, Name: "John Doe", Email: "john@example.com"},
-		},
+		db: db,
 	}
 }
 
 func (r *UserRepository) GetAll() []models.User {
-	return r.users
+	var users []models.User
+	r.db.Find(&users)
+	return users
 }
 
-func (r *UserRepository) GetByID(id int) (models.User, error) {
-	for _, user := range r.users {
-		if user.ID == id {
-			return user, nil
-		}
+func (r *UserRepository) GetByID(id uint) (models.User, error) {
+	var user models.User
+	result := r.db.First(&user, id)
+	if result.Error != nil {
+		return models.User{}, result.Error
 	}
-	return models.User{}, errors.New("user not found")
+	return user, nil
 }
 
-func (r *UserRepository) Create(user models.User) models.User {
-	user.ID = len(r.users) + 1
-	r.users = append(r.users, user)
-	return user
-}
-
-func (r *UserRepository) Update(id int, updatedUser models.User) (models.User, error) {
-	for i, user := range r.users {
-		if user.ID == id {
-			r.users[i] = updatedUser
-			return updatedUser, nil
-		}
+func (r *UserRepository) Create(user models.User) (models.User, error) {
+	result := r.db.Create(&user)
+	if result.Error != nil {
+		return models.User{}, result.Error
 	}
-	return models.User{}, errors.New("user not found")
+	return user, nil
 }
 
-func (r *UserRepository) Delete(id int) error {
-	for i, user := range r.users {
-		if user.ID == id {
-			r.users = append(r.users[:i], r.users[i+1:]...)
-			return nil
-		}
+func (r *UserRepository) Update(id uint, updatedUser models.User) (models.User, error) {
+	var user models.User
+	if err := r.db.First(&user, id).Error; err != nil {
+		return models.User{}, err
 	}
-	return errors.New("user not found")
+
+	user.Name = updatedUser.Name
+	user.Email = updatedUser.Email
+
+	if err := r.db.Save(&user).Error; err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}
+
+func (r *UserRepository) Delete(id uint) error {
+	result := r.db.Delete(&models.User{}, id)
+	return result.Error
 }

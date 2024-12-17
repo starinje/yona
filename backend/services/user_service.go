@@ -17,18 +17,18 @@ func (s *UserService) GetAllUsers() []models.User {
 	return s.repo.GetAll()
 }
 
-func (s *UserService) GetUserByID(id int) (models.User, error) {
+func (s *UserService) GetUserByID(id uint) (models.User, error) {
 	return s.repo.GetByID(id)
 }
 
-func (s *UserService) CreateUser(user models.User) models.User {
+func (s *UserService) CreateUser(user models.User) (models.User, error) {
 	return s.repo.Create(user)
 }
 
-func (s *UserService) UpdateUser(id int, user models.User) (models.User, error) {
+func (s *UserService) UpdateUser(id uint, user models.User) (models.User, error) {
 	return s.repo.Update(id, user)
 }
 
-func (s *UserService) DeleteUser(id int) error {
+func (s *UserService) DeleteUser(id uint) error {
 	return s.repo.Delete(id)
 }

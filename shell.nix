@@ -11,10 +11,4 @@
        pkgs.curl                # Add Curl
        pkgs.go-tools            # Optional: Go tools
      ];
-
-     shellHook = ''
-       echo "Setting up Go project environment"
-       go mod init your-project-name  # If not already done
-       go get -u github.com/gin-gonic/gin
-     '';
    }
