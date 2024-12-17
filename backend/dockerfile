@@ -1,16 +1,14 @@
 # backend/Dockerfile
-FROM golang:1.23-alpine
+FROM node:18
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY package*.json ./
 
-RUN go mod download
+RUN npm install
 
 COPY . .
 
-RUN go build -o main .
+EXPOSE 3000
 
-EXPOSE 8080
-
-CMD ["./main"]
+CMD ["npm", "run", "start:dev"]

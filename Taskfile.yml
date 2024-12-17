@@ -16,7 +16,7 @@ tasks:
   start:
     desc: Start the application stack with Docker Compose
     cmds:
-      - docker-compose up --build -d
+      - docker-compose up --build
 
   stop:
     desc: Stop the Docker Compose stack
@@ -24,7 +24,25 @@ tasks:
       - docker-compose down
 
   test-backend:
-    desc: Run backend tests with coverage
+    desc: Run backend tests
     dir: backend
     cmds:
-      - go test -v -cover ./...
+      - npm run test
+
+  migration:generate:
+    desc: Generate a new migration
+    dir: backend
+    cmds:
+      - npm run typeorm migration:generate -- -n {{.CLI_ARGS}}
+
+  migration:run:
+    desc: Run pending migrations
+    dir: backend
+    cmds:
+      - npm run typeorm migration:run
+
+  migration:revert:
+    desc: Revert last migration
+    dir: backend
+    cmds:
+      - npm run typeorm migration:revert

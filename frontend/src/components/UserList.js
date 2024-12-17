@@ -1,23 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './UserList.css';
+
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+};
 
 function UserList() {
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: '', email: '' });
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8080/users');
+      const response = await fetch(`${API_URL}/users`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  };
+  }, [API_URL]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,11 +38,14 @@ function UserList() {
   const createUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/users', {
+      const response = await fetch(`${API_URL}/users`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: defaultHeaders,
         body: JSON.stringify(newUser)
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const createdUser = await response.json();
       setUsers([...users, createdUser]);
       setNewUser({ name: '', email: '' });
@@ -45,9 +56,12 @@ function UserList() {
 
   const deleteUser = async (id) => {
     try {
-      await fetch(`http://localhost:8080/users/${id}`, {
+      const response = await fetch(`${API_URL}/users/${id}`, {
         method: 'DELETE'
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       setUsers(users.filter(user => user.id !== id));
     } catch (error) {
       console.error('Error deleting user:', error);
