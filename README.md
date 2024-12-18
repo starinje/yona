@@ -80,6 +80,23 @@ make test-backend
 
 This command will run all the defined tests to ensure everything is functioning correctly.
 
+### 7. Database Migrations
+
+To manage database schema changes, use these commands:
+
+```bash
+# Generate a new migration
+task migration-generate -- InitialMigration
+
+# Run pending migrations
+task migration-run
+
+# Revert the last migration
+task migration-revert
+```
+
+Note: Ensure Docker containers are running when executing migration commands.
+
 ### More to come, if you see something that should be here, please add it.
 
 ## 🤝 Contributing

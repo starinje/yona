@@ -1,7 +1,3 @@
--- Create the database if it doesn't exist
-CREATE DATABASE yona;
-
--- Connect to the database
 \c yona;
 
 -- Create extension if needed

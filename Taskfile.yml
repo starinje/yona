@@ -29,20 +29,22 @@ tasks:
     cmds:
       - npm run test
 
-  migration:generate:
+  migration-generate:
     desc: Generate a new migration
     dir: backend
+    vars:
+      MIGRATION_NAME: '{{default "InitialMigration" .CLI_ARGS}}'
     cmds:
-      - npm run typeorm migration:generate -- -n {{.CLI_ARGS}}
+      - npm run migration:generate --name={{.MIGRATION_NAME}}
 
-  migration:run:
+  migration-run:
     desc: Run pending migrations
     dir: backend
     cmds:
-      - npm run typeorm migration:run
+      - npm run migration:run
 
-  migration:revert:
+  migration-revert:
     desc: Revert last migration
     dir: backend
     cmds:
-      - npm run typeorm migration:revert
+      - npm run migration:revert
