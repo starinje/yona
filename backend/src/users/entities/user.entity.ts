@@ -5,10 +5,16 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  username: string;
+
+  @Column()
+  password: string;
+
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })
@@ -19,4 +25,4 @@ export class User {
 
   @Column({ nullable: true })
   thirdPhone: string;
-} 
+}

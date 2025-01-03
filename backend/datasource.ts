@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { User } from './src/users/entities/user.entity';

@@ -12,39 +12,29 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
-    user.name = createUserDto.name;
-    user.email = createUserDto.email;
+  async findByUsername(username: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { username } });
+  }
 
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);
   }
 
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
-  findOne(id: number): Promise<User> {
-    return this.usersRepository.findOneBy({ id });
+  async findOne(id: number): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { id } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    if (updateUserDto.name) {
-      user.name = updateUserDto.name;
-    }
-    if (updateUserDto.email) {
-      user.email = updateUserDto.email;
-    }
-
-    return this.usersRepository.save(user);
+    await this.usersRepository.update(id, updateUserDto);
+    return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
   }
-} 
+}
